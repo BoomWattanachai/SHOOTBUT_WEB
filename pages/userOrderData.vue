@@ -1,10 +1,5 @@
 <template>
   <v-container fluid>
-    <div class="text-center">
-      <v-btn rounded color="primary" dark @click="test()">Rounded Button</v-btn>
-    </div>
-    <v-text-field v-model="vv" label="Label"></v-text-field>
-    <h1>{{ vv }}</h1>
     <v-data-iterator
       :items="items"
       :items-per-page.sync="itemsPerPage"
@@ -105,15 +100,15 @@
             </v-list>
           </v-menu>
 
-          <!-- <v-spacer></v-spacer> -->
+          <v-spacer></v-spacer>
 
-          <!-- <span
+          <span
             class="mr-4
             grey--text"
           >
             Page {{ page }} of {{ numberOfPages }}
-          </span> -->
-          <!-- <v-btn
+          </span>
+          <v-btn
             fab
             dark
             color="blue darken-3"
@@ -121,27 +116,26 @@
             @click="formerPage"
           >
             <v-icon>mdi-chevron-left</v-icon>
-          </v-btn> -->
-          <!-- <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
+          </v-btn>
+          <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
             <v-icon>mdi-chevron-right</v-icon>
-          </v-btn> -->
+          </v-btn>
         </v-row>
       </template>
     </v-data-iterator>
   </v-container>
 </template>
-
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
-  data(): any {
+  data() {
     return {
-      vv: '',
+      itemsPerPageArray: [4, 8, 12],
       search: '',
       filter: {},
       sortDesc: false,
       page: 1,
-      itemsPerPage: 12,
+      itemsPerPage: 4,
       sortBy: 'name',
       keys: [
         'Name',
@@ -257,19 +251,22 @@ export default Vue.extend({
       ]
     }
   },
-  computed: {},
-  methods: {
-    test() {
-      this.vv = 'text'
+  computed: {
+    numberOfPages() {
+      return Math.ceil(this.items.length / this.itemsPerPage)
     },
-
+    filteredKeys() {
+      return this.keys.filter((key) => key !== `Name`)
+    }
+  },
+  methods: {
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
     },
     formerPage() {
       if (this.page - 1 >= 1) this.page -= 1
     },
-    updateItemsPerPage(number: any) {
+    updateItemsPerPage(number) {
       this.itemsPerPage = number
     }
   }
