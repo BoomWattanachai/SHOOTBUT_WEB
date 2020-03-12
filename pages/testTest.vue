@@ -26,12 +26,8 @@
     </template>
 
     <v-row justify="center">
-      <v-expansion-panels popout>
-        <v-expansion-panel
-          v-for="(message, i) in filteredMessage"
-          :key="i"
-          hide-actions
-        >
+      <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
+        <v-expansion-panel v-for="(message1, j) in filteredMessage2" :key="j">
           <v-expansion-panel-header>
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="4" sm="2" md="1">
@@ -39,20 +35,20 @@
               </v-col>
 
               <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3 v-html="message.productId"></h3>
+                <h3 v-html="messages[i].order[j].orderId"></h3>
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3 v-html="message.categoryId"></h3>
+                <h3 v-html="message.email"></h3>
+              </v-col>
+
+              <!-- <v-col class="text-no-wrap" cols="5" sm="2">
+                <h3 v-html="messages[j].order.orderDateTime"></h3>
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3 v-html="message.category.categoryName"></h3>
-              </v-col>
-
-              <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3 v-html="message.categoryId"></h3>
-              </v-col>
+                <h3 v-html="messages[j].order.orderStatus"></h3>
+              </v-col> -->
               <!--                   
                   <v-col class="text-no-wrap" cols="5" sm="3">
                     <strong v-html="message.testA"></strong>
@@ -90,19 +86,25 @@ export default Vue.extend({
   computed: {
     filteredMessage() {
       return this.messages.filter((message) => {
-        return (
-          message.productId
-            .toLowerCase()
-            .match(this.searchByOrderNumber.toLowerCase()) &&
-          message.category.categoryName
-            .toLowerCase()
-            .match(this.searchByUserEmail.toLowerCase())
-        )
+        console.log('rfrr')
+        return message.email
+          .toLowerCase()
+          .match(this.searchByUserEmail.toLowerCase())
+      })
+    },
+    filteredMessage2() {
+      return this.messages.filter((message) => {
+        message.order.filter((order) => {
+          console.log(
+            'chk ' + order.orderId.toString().match(this.searchByOrderNumber)
+          )
+          return order.orderId.toString().match(this.searchByOrderNumber)
+        })
       })
     }
   },
   async created() {
-    await aaa.getPost().then((res: any) => {
+    await aaa.getUserList().then((res: any) => {
       this.messages = res
       console.log(res)
     })
