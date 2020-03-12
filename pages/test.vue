@@ -38,14 +38,6 @@
               label="Sort by"
             ></v-select>
             <v-spacer></v-spacer>
-            <!-- <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-btn large depressed color="blue" :value="false">
-                <v-icon>mdi-arrow-up</v-icon>
-              </v-btn>
-              <v-btn large depressed color="blue" :value="true">
-                <v-icon>mdi-arrow-down</v-icon>
-              </v-btn>
-            </v-btn-toggle> -->
           </template>
         </v-toolbar>
       </template>
@@ -104,27 +96,6 @@
               </v-list-item>
             </v-list>
           </v-menu>
-
-          <!-- <v-spacer></v-spacer> -->
-
-          <!-- <span
-            class="mr-4
-            grey--text"
-          >
-            Page {{ page }} of {{ numberOfPages }}
-          </span> -->
-          <!-- <v-btn
-            fab
-            dark
-            color="blue darken-3"
-            class="mr-1"
-            @click="formerPage"
-          >
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn> -->
-          <!-- <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn> -->
         </v-row>
       </template>
     </v-data-iterator>
