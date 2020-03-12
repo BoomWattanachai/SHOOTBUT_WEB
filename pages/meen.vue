@@ -62,7 +62,7 @@ export default Vue.extend({
     }
   },
   async created() {
-    await aa.getpost().then((res: any) => {
+    await aa.getUserList().then((res: any) => {
       this.messages = res
       console.log(res)
     })

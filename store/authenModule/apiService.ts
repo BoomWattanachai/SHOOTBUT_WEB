@@ -10,6 +10,15 @@ export async function getUserList(){
     }
 }
 
+export async function getPost(){
+    try{
+        const res = await BaseUrl.get('/product-data/selectProductList')
+        return res.data
+    }catch(e){
+        console.error(e)
+    }
+}
+
 export async function selectProductFoodData(productId:string){
     try{
         const res = await BaseUrl.get('/product-data/selectProductFoodData/'+productId)
