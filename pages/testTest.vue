@@ -26,8 +26,10 @@
     </template>
 
     <v-row justify="center">
-      <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
-        <v-expansion-panel v-for="(message1, j) in filteredMessage2" :key="j">
+      <!-- <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i"> -->
+      <v-expansion-panels v-for="(message, i) in filteredMessage2" :key="i">
+        <v-expansion-panel v-for="(order, j) in message.order" :key="j">
+        <v-expansion-panel>
           <v-expansion-panel-header>
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="4" sm="2" md="1">
@@ -35,7 +37,7 @@
               </v-col>
 
               <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3 v-html="messages[i].order[j].orderId"></h3>
+                <h3 v-html="message.order[0].orderId"></h3>
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="2">
@@ -84,22 +86,38 @@ export default Vue.extend({
     }
   },
   computed: {
-    filteredMessage() {
+    filteredMessage0() {
       return this.messages.filter((message) => {
         console.log('rfrr')
-        return message.email
+        const b = message.email
           .toLowerCase()
           .match(this.searchByUserEmail.toLowerCase())
+        console.log('Result ' + b)
+        return b
       })
     },
     filteredMessage2() {
+      // const a = this.messages.filter((message) => {
+      // if( message.order.filter((order) => {
+      //   if(order.orderId.toString() ===(this.searchByOrderNumber.toString())){
+      //   }
+      console.log(this.messages)
       return this.messages.filter((message) => {
-        message.order.filter((order) => {
-          console.log(
-            'chk ' + order.orderId.toString().match(this.searchByOrderNumber)
+        return message.order.find((order) => {
+          // return order
+          console.log('orderId' + order)
+          let a: null
+          if (
+            (a = order.orderId
+              .toString()
+              .match(this.searchByOrderNumber.toString())) &&
+            (a = message.email
+              .toLowerCase()
+              .match(this.searchByUserEmail.toLowerCase()))
           )
-          return order.orderId.toString().match(this.searchByOrderNumber)
+            return a
         })
+        // return message
       })
     }
   },
