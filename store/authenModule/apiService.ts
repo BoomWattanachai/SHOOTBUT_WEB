@@ -1,10 +1,12 @@
 import {BaseUrl} from '../apiConfig'
-import { SubmitDTO } from './authenDTO'
+import { SubmitDTO, UserListData } from './authenDTO'
 
-export async function getUserList(){
+export async function getUserList():Promise<UserListData[] | undefined>
+
+{
     try{
         const res = await BaseUrl.get('/user-data/getUserList')
-        return res.data
+        return res.data as UserListData[]
     }catch(e){
         console.error(e)
     }
