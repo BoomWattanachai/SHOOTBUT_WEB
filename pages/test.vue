@@ -26,8 +26,9 @@
     </template>
 
     <v-row justify="center">
+      <!-- <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i"> -->
       <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
-        <v-expansion-panel v-for="(order, j) in message.order" :key="j">
+        <v-expansion-panel>
           <v-expansion-panel-header>
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="4" sm="2" md="1">
@@ -35,7 +36,7 @@
               </v-col>
 
               <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3 v-html="order.orderId"></h3>
+                <h3 v-html="message.orderId"></h3>
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="2">
@@ -72,10 +73,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import * as aaa from '@/store/authenModule/apiService'
+
 export default Vue.extend({
   data() {
     return {
-      //   itemsPerPageArray: [4, 8, 12],
       messages: [],
       lorem: 'aaaaaaa',
       searchByOrderNumber: '',
@@ -86,21 +87,17 @@ export default Vue.extend({
   computed: {
     filteredMessage() {
       return this.messages.filter((message) => {
-        return message.email
-          .toLowerCase()
-          .match(this.searchByUserEmail.toLowerCase())
+        return (
+          message.email.toLowerCase().match(this.searchByUserEmail) &&
+          message.orderId.toString().match(this.searchByOrderNumber)
+        )
       })
     }
-    // ,
-    // filteredMessage2() {
-    //   return this.messages.filter((message) => {
-
-    //   })
-    // }
   },
   async created() {
     await aaa.getUserList().then((res: any) => {
       this.messages = res
+
       console.log(res)
     })
   },

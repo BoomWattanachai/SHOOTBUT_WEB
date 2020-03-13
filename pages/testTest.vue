@@ -26,7 +26,8 @@
     </template>
 
     <v-row justify="center">
-      <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
+      <!-- <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i"> -->
+      <v-expansion-panels v-for="(message, i) in filteredMessage2" :key="i">
         <v-expansion-panel v-for="(order, j) in message.order" :key="j">
           <v-expansion-panel-header>
             <v-row align="center" class="spacer" no-gutters>
@@ -73,35 +74,64 @@
 import Vue from 'vue'
 import * as aaa from '@/store/authenModule/apiService'
 
-type OrderList = {
-  email: string
-  orderId: number
-  orderDateTime: Date
-  orderStatus: number
-}
-
 export default Vue.extend({
-  props: {
-    orderList: {
-      type: Object as () => OrderList
-    }
-  },
   data() {
     return {
       //   itemsPerPageArray: [4, 8, 12],
       messages: [],
       lorem: 'aaaaaaa',
       searchByOrderNumber: '',
-      searchByUserEmail: ''
+      searchByUserEmail: '',
+      order: []
     }
   },
   computed: {
-    filteredMessage() {
+    filteredMessage0() {
       return this.messages.filter((message) => {
-        return message.email
+        // console.log('rfrr')
+        const b = message.email
           .toLowerCase()
           .match(this.searchByUserEmail.toLowerCase())
+        // console.log('Result ' + b)
+        return b
       })
+    },
+    filteredMessage2() {
+      // const a = this.messages.filter((message) => {
+      // if( message.order.filter((order) => {
+      //   if(order.orderId.toString() ===(this.searchByOrderNumber.toString())){
+      //   }
+      // console.log(this.messages)
+
+      const t = this.messages.filter((message) => {
+        return message.order.find((order) => {
+          // return order
+          // console.log('orderId' + order)
+          let a: null
+          if (
+            (a = order.orderId
+              .toString()
+              .match(this.searchByOrderNumber.toString())) &&
+            (a = message.email
+              .toLowerCase()
+              .match(this.searchByUserEmail.toLowerCase()))
+          )
+            console.log('aaaaa11111')
+          console.log(a)
+          console.log('aaaaa2222')
+
+          return a
+        })
+        // return message
+      })
+      const s = t
+
+      console.log('ssssss111')
+      console.log(this.messages[0])
+      console.log(s)
+      console.log('sss2222')
+      console.log('--------------------------------')
+      return t
     }
     // ,
     // filteredMessage2() {
@@ -114,16 +144,7 @@ export default Vue.extend({
     await aaa.getUserList().then((res: any) => {
       this.messages = res
 
-      this.messages.forEach((message: any) => {
-        message.order.forEach((order: any) => {
-          this.orderList.email = message.email
-          this.orderList.orderId = order.orderId
-          this.orderList.orderDateTime = order.orderDateTime
-          this.orderList.orderStatus = order.orderStatus
-        })
-      })
-      console.log('Boommmmmmmmmmmm')
-      console.log(orderList)
+      console.log(res)
     })
   },
   methods: {}
