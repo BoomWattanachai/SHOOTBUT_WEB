@@ -27,8 +27,8 @@
 
     <v-row justify="center">
       <!-- <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i"> -->
-      <v-expansion-panels v-for="(message, i) in filteredMessage2" :key="i">
-        <v-expansion-panel v-for="(order, j) in message.order" :key="j">
+      <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
+        <v-expansion-panel>
           <v-expansion-panel-header>
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="4" sm="2" md="1">
@@ -36,7 +36,7 @@
               </v-col>
 
               <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3 v-html="order.orderId"></h3>
+                <h3 v-html="message.orderId"></h3>
               </v-col>
 
               <v-col class="text-no-wrap" cols="5" sm="2">
@@ -63,7 +63,7 @@
           <v-expansion-panel-content>
             <v-divider></v-divider>
             <v-card-text v-text="lorem"></v-card-text>
-            <h3>abc</h3>
+            <h3>{{ message.orderId }}</h3>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -77,7 +77,6 @@ import * as aaa from '@/store/authenModule/apiService'
 export default Vue.extend({
   data() {
     return {
-      //   itemsPerPageArray: [4, 8, 12],
       messages: [],
       lorem: 'aaaaaaa',
       searchByOrderNumber: '',
@@ -86,59 +85,14 @@ export default Vue.extend({
     }
   },
   computed: {
-    filteredMessage0() {
+    filteredMessage() {
       return this.messages.filter((message) => {
-        // console.log('rfrr')
-        const b = message.email
-          .toLowerCase()
-          .match(this.searchByUserEmail.toLowerCase())
-        // console.log('Result ' + b)
-        return b
+        return (
+          message.email.toLowerCase().match(this.searchByUserEmail) &&
+          message.orderId.toString().match(this.searchByOrderNumber)
+        )
       })
-    },
-    filteredMessage2() {
-      // const a = this.messages.filter((message) => {
-      // if( message.order.filter((order) => {
-      //   if(order.orderId.toString() ===(this.searchByOrderNumber.toString())){
-      //   }
-      // console.log(this.messages)
-
-      const t = this.messages.filter((message) => {
-        return message.order.find((order) => {
-          // return order
-          // console.log('orderId' + order)
-          let a: null
-          if (
-            (a = order.orderId
-              .toString()
-              .match(this.searchByOrderNumber.toString())) &&
-            (a = message.email
-              .toLowerCase()
-              .match(this.searchByUserEmail.toLowerCase()))
-          )
-            console.log('aaaaa11111')
-          console.log(a)
-          console.log('aaaaa2222')
-
-          return a
-        })
-        // return message
-      })
-      const s = t
-
-      console.log('ssssss111')
-      console.log(this.messages[0])
-      console.log(s)
-      console.log('sss2222')
-      console.log('--------------------------------')
-      return t
     }
-    // ,
-    // filteredMessage2() {
-    //   return this.messages.filter((message) => {
-
-    //   })
-    // }
   },
   async created() {
     await aaa.getUserList().then((res: any) => {
