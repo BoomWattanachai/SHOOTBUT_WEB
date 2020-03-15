@@ -43,7 +43,7 @@
                 <h3 v-html="message.email"></h3>
               </v-col>
 
-              <!-- <v-col class="text-no-wrap" cols="5" sm="2">
+              <!-- <v-col class="text-no-wrap" cols="5" sm="2">gi
                 <h3 v-html="messages[j].order.orderDateTime"></h3>
               </v-col>
 
