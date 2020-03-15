@@ -51,13 +51,13 @@
                 <h3 v-html="message.email"></h3>
               </v-col> -->
 
-              <v-col cols="12" sm="2" v-if="order.orderStatus === 1">
+              <v-col v-if="order.orderStatus === 1" cols="12" sm="2">
                 <v-card-text class="red--text text-no-wrap"
                   >In Progress</v-card-text
                 >
               </v-col>
 
-              <v-col cols="12" sm="2" v-if="order.orderStatus === 2">
+              <v-col v-if="order.orderStatus === 2" cols="12" sm="2">
                 <v-card-text class="green--text text-no-wrap"
                   >Success</v-card-text
                 >
@@ -116,7 +116,7 @@
                   <v-col cols="12" sm="3">
                     <v-card-text>
                       <v-img
-                        v-bind:src="orderDetail.product.productDetail.image"
+                        :src="orderDetail.product.productDetail.image"
                         aspect-ratio="1.4"
                         contain
                         max-width="100"
@@ -151,12 +151,12 @@
                   Total: {{ order.totalPrice }}
                 </p>
               </v-col>
-              <v-col cols="12" sm="1" v-if="order.orderStatus === 1">
+              <v-col v-if="order.orderStatus === 1" cols="12" sm="1">
                 <div class="my-2 mt-n1">
                   <v-btn small color="success" dark>Confirm Order</v-btn>
                 </div>
               </v-col>
-              <v-col cols="12" sm="1" v-if="order.orderStatus === 2">
+              <v-col v-if="order.orderStatus === 2" cols="12" sm="1">
                 <div class="my-1 mt-n1">
                   <v-btn small disabled>Confirm Order</v-btn>
                 </div>
@@ -183,6 +183,43 @@ export default Vue.extend({
       searchByUserEmail: '',
       order: [],
       isLoaded: false
+    }
+  },
+  computed: {
+    filteredMessage2() {
+      if (!this.isLoaded) return null
+      let listMessage = null
+      listMessage = this.dataList
+      const result = listMessage
+        .filter((message) => {
+          return message.order.some((order) => {
+            return (
+              order.orderId
+                .toString()
+                .match(this.searchByOrderNumber.toString()) &&
+              message.email
+                .toLowerCase()
+                .match(this.searchByUserEmail.toLowerCase())
+            )
+          })
+        })
+        .map((message) => {
+          const mappedData = Object.assign({}, message, {
+            order: message.order.filter((order) => {
+              return (
+                order.orderId
+                  .toString()
+                  .match(this.searchByOrderNumber.toString()) &&
+                message.email
+                  .toLowerCase()
+                  .match(this.searchByUserEmail.toLowerCase())
+              )
+            })
+          })
+          return mappedData
+        })
+      console.log(result)
+      return result
     }
   },
   async created() {
@@ -248,43 +285,6 @@ export default Vue.extend({
       // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
       // console.log(userData[0].order[0].orderDetail[0].product)
     })
-  },
-  computed: {
-    filteredMessage2() {
-      if (!this.isLoaded) return null
-      let listMessage = null
-      listMessage = this.dataList
-      const result = listMessage
-        .filter((message) => {
-          return message.order.some((order) => {
-            return (
-              order.orderId
-                .toString()
-                .match(this.searchByOrderNumber.toString()) &&
-              message.email
-                .toLowerCase()
-                .match(this.searchByUserEmail.toLowerCase())
-            )
-          })
-        })
-        .map((message) => {
-          const mappedData = Object.assign({}, message, {
-            order: message.order.filter((order) => {
-              return (
-                order.orderId
-                  .toString()
-                  .match(this.searchByOrderNumber.toString()) &&
-                message.email
-                  .toLowerCase()
-                  .match(this.searchByUserEmail.toLowerCase())
-              )
-            })
-          })
-          return mappedData
-        })
-      console.log(result)
-      return result
-    }
   },
 
   methods: {}
