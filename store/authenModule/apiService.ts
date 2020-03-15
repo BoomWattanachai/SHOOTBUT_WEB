@@ -1,7 +1,7 @@
 import { BaseUrl } from '../apiConfig'
 import { SubmitDTO, UserListData, OrderList } from './authenDTO'
 
-export async function getUserList(): Promise<OrderList[] | undefined> {
+export async function getOrderList(): Promise<OrderList[] | undefined> {
   try {
     const res = await BaseUrl.get('/user-data/getUserList')
     const res2 = res.data as UserListData[]
@@ -12,28 +12,36 @@ export async function getUserList(): Promise<OrderList[] | undefined> {
     //   orderDateTime: '',
     //   orderStatus: 0
     // }
-    
 
     res2.forEach(function(order) {
-      console.log('order')
-      console.log(order)
+    //   console.log('order')
+    //   console.log(order)
       order.order.forEach(function(orderData) {
         const data = {} as OrderList
-        console.log('orderData')
-        console.log(orderData)
+        // console.log('orderData')
+        // console.log(orderData)
         data.email = order.email
         data.orderId = orderData.orderId
         data.orderDateTime = orderData.orderDateTime
         data.orderStatus = orderData.orderStatus
-        console.log('data')
-        console.log(data)
+        // console.log('data')
+        // console.log(data)
         orderList.push(data)
       })
     })
-    console.log('orderList as OrderList[]')
-    console.log(orderList as OrderList[])
+    // console.log('orderList as OrderList[]')
+    // console.log(orderList as OrderList[])
 
     return orderList as OrderList[]
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function getUserList() {
+  try {
+    const res = await BaseUrl.get('/user-data/getUserList')
+    return res.data
   } catch (e) {
     console.error(e)
   }

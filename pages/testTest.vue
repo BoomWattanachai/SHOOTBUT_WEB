@@ -30,40 +30,95 @@
       <v-expansion-panels v-for="(message, i) in filteredMessage2" :key="i">
         <v-expansion-panel v-for="(order, j) in message.order" :key="j">
           <v-expansion-panel-header>
-            <v-row align="center" class="spacer" no-gutters>
-              <v-col cols="4" sm="2" md="1">
+            <v-row no-gutters>
+              <v-col cols="12" sm="3" md="1">
                 <v-avatar size="36px"> </v-avatar>
               </v-col>
 
-              <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3 v-html="order.orderId"></h3>
+              <v-col cols="12" sm="3" class="ml-12">
+                <v-card-text>{{ order.orderId }}</v-card-text>
               </v-col>
 
-              <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3 v-html="message.email"></h3>
+              <v-col cols="12" sm="4" class="mr-6 ml-n10">
+                <v-card-text>{{ message.email }}</v-card-text>
               </v-col>
 
-              <!-- <v-col class="text-no-wrap" cols="5" sm="2">gi
-                <h3 v-html="messages[j].order.orderDateTime"></h3>
+              <v-col v-if="order.orderStatus === 1" cols="12" sm="2">
+                <v-card-text class="red--text text-no-wrap"
+                  >In Progress</v-card-text
+                >
               </v-col>
 
-              <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3 v-html="messages[j].order.orderStatus"></h3>
-              </v-col> -->
-              <!--                   
-                  <v-col class="text-no-wrap" cols="5" sm="3">
-                    <strong v-html="message.testA"></strong>
-                  </v-col>
+              <v-col v-if="order.orderStatus === 2" cols="12" sm="2">
+                <v-card-text class="green--text text-no-wrap"
+                  >Success</v-card-text
+                >
+              </v-col>
 
-                  <v-col class="text-no-wrap" cols="5" sm="3">
-                    <strong v-html="message.testB"></strong>
-                  </v-col> -->
+              <v-col cols="12" sm="1">
+                <v-card-text> </v-card-text>
+              </v-col>
             </v-row>
           </v-expansion-panel-header>
+
+          <div v-for="(orderDetail, index) in order.orderDetail" :key="index">
+            <div v-if="orderDetail.product.productDetail">
+              <v-expansion-panel-content>
+                <v-divider></v-divider>
+
+                <v-row>
+                  <v-col cols="12" sm="1">
+                    <v-card-text> </v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-card-text>
+                      <v-img
+                        :src="orderDetail.product.productDetail.image"
+                        aspect-ratio="1.4"
+                        contain
+                        max-width="100"
+                        max-height="100"
+                      ></v-img>
+                    </v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="4">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.brand
+                    }}</v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.model
+                    }}</v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="1">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.price
+                    }}</v-card-text>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </div>
+          </div>
           <v-expansion-panel-content>
             <v-divider></v-divider>
-            <v-card-text v-text="lorem"></v-card-text>
-            <h3>abc</h3>
+            <v-row class="mt-3 mb-n4">
+              <v-col cols="12" sm="11">
+                <p class="font-weight-black text-right">
+                  Total: {{ order.totalPrice }}
+                </p>
+              </v-col>
+              <v-col v-if="order.orderStatus === 1" cols="12" sm="1">
+                <div class="my-2 mt-n1">
+                  <v-btn small color="success" dark>Confirm Order</v-btn>
+                </div>
+              </v-col>
+              <v-col v-if="order.orderStatus === 2" cols="12" sm="1">
+                <div class="my-1 mt-n1">
+                  <v-btn small disabled>Confirm Order</v-btn>
+                </div>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -72,81 +127,191 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import * as aaa from '@/store/authenModule/apiService'
+import firebase from 'firebase'
+
+import * as apiService from '@/store/authenModule/apiService'
 
 export default Vue.extend({
   data() {
     return {
       //   itemsPerPageArray: [4, 8, 12],
       messages: [],
+      dataList: [],
+      allData: [],
       lorem: 'aaaaaaa',
       searchByOrderNumber: '',
       searchByUserEmail: '',
-      order: []
+      order: [],
+      isLoaded: false
     }
   },
   computed: {
-    filteredMessage0() {
-      return this.messages.filter((message) => {
-        // console.log('rfrr')
-        const b = message.email
-          .toLowerCase()
-          .match(this.searchByUserEmail.toLowerCase())
-        // console.log('Result ' + b)
-        return b
-      })
-    },
     filteredMessage2() {
-      // const a = this.messages.filter((message) => {
-      // if( message.order.filter((order) => {
-      //   if(order.orderId.toString() ===(this.searchByOrderNumber.toString())){
-      //   }
-      // console.log(this.messages)
-
-      const t = this.messages.filter((message) => {
-        return message.order.find((order) => {
-          // return order
-          // console.log('orderId' + order)
-          let a: null
-          if (
-            (a = order.orderId
-              .toString()
-              .match(this.searchByOrderNumber.toString())) &&
-            (a = message.email
-              .toLowerCase()
-              .match(this.searchByUserEmail.toLowerCase()))
-          )
-            console.log('aaaaa11111')
-          console.log(a)
-          console.log('aaaaa2222')
-
-          return a
+      if (!this.isLoaded) return null
+      let listMessage = null
+      listMessage = this.dataList
+      const result = listMessage
+        .filter((message) => {
+          return message.order.some((order) => {
+            return (
+              order.orderId
+                .toString()
+                .match(this.searchByOrderNumber.toString()) &&
+              message.email
+                .toLowerCase()
+                .match(this.searchByUserEmail.toLowerCase())
+            )
+          })
         })
-        // return message
-      })
-      const s = t
-
-      console.log('ssssss111')
-      console.log(this.messages[0])
-      console.log(s)
-      console.log('sss2222')
-      console.log('--------------------------------')
-      return t
+        .map((message) => {
+          const mappedData = Object.assign({}, message, {
+            order: message.order.filter((order) => {
+              return (
+                order.orderId
+                  .toString()
+                  .match(this.searchByOrderNumber.toString()) &&
+                message.email
+                  .toLowerCase()
+                  .match(this.searchByUserEmail.toLowerCase())
+              )
+            })
+          })
+          return mappedData
+        })
+      // console.log(result)
+      return result
     }
-    // ,
-    // filteredMessage2() {
-    //   return this.messages.filter((message) => {
-
-    //   })
-    // }
   },
   async created() {
-    await aaa.getUserList().then((res: any) => {
-      this.messages = res
+    let count = 0
+    await apiService.getUserList().then((data) => {
+      const userDataList = data
+      userDataList.forEach((userData: any) => {
+        console.log('log1')
+        userData.order.forEach((order: any) => {
+          console.log('log2')
+          order.orderDetail.forEach(async (orderDetail: any) => {
+            console.log('log3')
+            const product = orderDetail.product
+            if (product.categoryId === 1) {
+              await apiService
+                .selectProductFoodData(product.productId)
+                .then((response) => {
+                  console.log('log6')
+                  const data = response[0]
+                  orderDetail.product.productDetail = {
+                    image: data.foodAndBevImage,
+                    brand: data.foodAndBevBrand,
+                    model: data.foodAndBevModel,
+                    price: data.foodAndBevPrice
+                  }
+                })
+                .then(() => {
+                  // console.log('log4')
+                  // console.log('111111111')
+                  // console.log(count)
+                  count++
+                  // console.log('222222222')
+                  // console.log(count)
+                  // console.log('----------------------------')
+                  if (
+                    count ===
+                    userDataList.length +
+                      userData.order.length +
+                      order.orderDetail.length
+                  ) {
+                    this.dataList = userDataList
+                    this.messages = userDataList
+                    this.isLoaded = true
+                  }
+                })
+            } else if (product.categoryId === 2) {
+              await apiService
+                .selectProductElectronic(product.productId)
+                .then((response) => {
+                  const data = response[0]
+                  orderDetail.product.productDetail = {
+                    image: data.electronicImage,
+                    brand: data.electronicBrand,
+                    model: data.electronicModel,
+                    price: data.electronicPrice
+                  }
+                })
+                .then(() => {
+                  // console.log('log4')
+                  // console.log('111111111')
+                  // console.log(count)
+                  count++
+                  // console.log('222222222')
+                  // console.log(count)
+                  // console.log('----------------------------')
+                  if (
+                    count ===
+                    userDataList.length +
+                      userData.order.length +
+                      order.orderDetail.length
+                  ) {
+                    this.dataList = userDataList
+                    this.messages = userDataList
+                    this.isLoaded = true
+                  }
+                })
+            } else if (product.categoryId === 3) {
+              await apiService
+                .selectProductFurniture(product.productId)
+                .then((response) => {
+                  const data = response[0]
+                  orderDetail.product.productDetail = {
+                    image: data.furnitureImage,
+                    brand: data.furnitureBrand,
+                    model: data.furnitureModel,
+                    price: data.furniturePrice
+                  }
+                })
+                .then(() => {
+                  // console.log('log4')
+                  // console.log('111111111')
+                  // console.log(count)
+                  count++
+                  // console.log('222222222')
+                  // console.log(count)
+                  // console.log('----------------------------')
+                  if (
+                    count ===
+                    userDataList.length +
+                      userData.order.length +
+                      order.orderDetail.length
+                  ) {
+                    this.dataList = userDataList
+                    this.messages = userDataList
+                    this.isLoaded = true
+                  }
+                })
+            }
+          })
+        })
+      })
+      console.log('log5')
+      // console.log(this.allData)
+      // if (this.allData.length === 0) {
+      //   console.log('aaasdasdsafsafasdfa')
+      //   this.allData = userDataList
+      // }
 
-      console.log(res)
+      // this.dataList = this.allData
+      // this.messages = userDataList
+      // console.log(userDataList)
+      // console.log('this.dataList1')
+      // console.log(this.allData[0])
+      // this.isLoaded = true
+      // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
+      // console.log(userData[0].order[0].orderDetail[0].product)
     })
   },
+  async mounted() {
+    console.log(await firebase.auth().currentUser)
+  },
+
   methods: {}
 })
 </script>
