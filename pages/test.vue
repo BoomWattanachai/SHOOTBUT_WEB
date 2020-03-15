@@ -27,29 +27,72 @@
 
     <v-row justify="center">
       <!-- <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i"> -->
-      <v-expansion-panels v-for="(message, i) in filteredMessage" :key="i">
-        <v-expansion-panel>
+      <v-expansion-panels v-for="(message, i) in filteredMessage2" :key="i">
+        <v-expansion-panel v-for="(order, j) in message.order" :key="j">
           <v-expansion-panel-header>
-            <v-row align="center" class="spacer" no-gutters>
-              <v-col cols="4" sm="2" md="1">
+            <v-row no-gutters>
+              <v-col cols="12" sm="3" md="1">
                 <v-avatar size="36px"> </v-avatar>
               </v-col>
 
-              <v-col class="hidden-xs-only" sm="5" md="3">
-                <h3>Order Number# {{ message.orderId }}</h3>
+              <v-col cols="12" sm="3" class="ml-12">
+                <v-card-text>{{ order.orderId }}</v-card-text>
               </v-col>
 
-              <v-col class="tex{t-no-wrap" cols="5" sm="2">
-                <h3>{{ message.email }}</h3>
+              <v-col cols="12" sm="4" class="mr-6 ml-n10">
+                <v-card-text>{{ message.email }}</v-card-text>
               </v-col>
-              <v-spacer></v-spacer>
+
+              <!-- <v-col class="hidden-xs-only" sm="12" md="3">
+                <h3 v-html="order.orderId"></h3>
+              </v-col>
+
+              <v-col class="text-no-wrap" cols="12" sm="3">
+                <h3 v-html="message.email"></h3>
+              </v-col> -->
+
+              <v-col cols="12" sm="2" v-if="order.orderStatus === 1">
+                <v-card-text class="red--text text-no-wrap"
+                  >In Progress</v-card-text
+                >
+              </v-col>
+
+              <v-col cols="12" sm="2" v-if="order.orderStatus === 2">
+                <v-card-text class="green--text text-no-wrap"
+                  >Success</v-card-text
+                >
+              </v-col>
+
+              <v-col cols="12" sm="1">
+                <v-card-text> </v-card-text>
+              </v-col>
+
+              <!-- <v-col
+                class="red--text text-no-wrap"
+                cols="12"
+                sm="5"
+                v-if="order.orderStatus === 1"
+              >
+              
+                <h3>In Progress</h3>
+              </v-col>
+
+              <v-col
+                class="green--text text-no-wrap"
+                cols="12"
+                sm="5"
+                v-if="order.orderStatus === 2"
+              >
+                <h3>Success</h3>
+              </v-col> -->
+
+              <!-- <v-col class="text-no-wrap" cols="5" sm="2">
+                <h3 v-html="messages[j].order.orderDateTime"></h3>
+              </v-col>
+
               <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3>{{ message.orderDateTime }}</h3>
-              </v-col>
-              <v-spacer></v-spacer>
-              <v-col class="text-no-wrap" cols="5" sm="2">
-                <h3>{{ message.orderStatus }}</h3>
-              </v-col>
+                <h3 v-html="messages[j].order.orderStatus"></h3>
+              </v-col> -->
               <!--                   
                   <v-col class="text-no-wrap" cols="5" sm="3">
                     <strong v-html="message.testA"></strong>
@@ -60,23 +103,63 @@
                   </v-col> -->
             </v-row>
           </v-expansion-panel-header>
-          <v-expansion-panel-content
-            v-for="(detail, index) in selectOrderDetail"
-            :key="index"
-          >
+
+          <div v-for="(orderDetail, index) in order.orderDetail" :key="index">
+            <div v-if="orderDetail.product.productDetail">
+              <v-expansion-panel-content>
+                <v-divider></v-divider>
+
+                <v-row>
+                  <v-col cols="12" sm="1">
+                    <v-card-text> </v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-card-text>
+                      <v-img
+                        v-bind:src="orderDetail.product.productDetail.image"
+                        aspect-ratio="1.4"
+                        contain
+                        max-width="100"
+                        max-height="100"
+                      ></v-img>
+                    </v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="4">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.brand
+                    }}</v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.model
+                    }}</v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="1">
+                    <v-card-text>{{
+                      orderDetail.product.productDetail.price
+                    }}</v-card-text>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </div>
+          </div>
+          <v-expansion-panel-content>
             <v-divider></v-divider>
-            <v-row>
-              <v-col cols="12" sm="3">
-                <v-card-text>{{ detail.orderId }}</v-card-text>
+            <v-row class="mt-3 mb-n4">
+              <v-col cols="12" sm="11">
+                <p class="font-weight-black text-right">
+                  Total: {{ order.totalPrice }}
+                </p>
               </v-col>
-              <v-col cols="12" sm="3">
-                <v-card-text>{{ detail.brand }}</v-card-text>
+              <v-col cols="12" sm="1" v-if="order.orderStatus === 1">
+                <div class="my-2 mt-n1">
+                  <v-btn small color="success" dark>Confirm Order</v-btn>
+                </div>
               </v-col>
-              <v-col cols="12" sm="3">
-                <v-card-text>{{ detail.model }}</v-card-text>
-              </v-col>
-              <v-col cols="12" sm="3">
-                <v-card-text>{{ detail.price }}</v-card-text>
+              <v-col cols="12" sm="1" v-if="order.orderStatus === 2">
+                <div class="my-1 mt-n1">
+                  <v-btn small disabled>Confirm Order</v-btn>
+                </div>
               </v-col>
             </v-row>
           </v-expansion-panel-content>
@@ -92,48 +175,21 @@ import * as apiService from '@/store/authenModule/apiService'
 export default Vue.extend({
   data() {
     return {
+      //   itemsPerPageArray: [4, 8, 12],
       messages: [],
+      dataList: [],
       lorem: 'aaaaaaa',
       searchByOrderNumber: '',
       searchByUserEmail: '',
-      orderDatail: [],
-      id: [],
-      email: '',
-      kkk: -1
+      order: [],
+      isLoaded: false
     }
   },
-  computed: {
-    filteredMessage() {
-      return this.messages.filter((message) => {
-        return (
-          message.email.toLowerCase().match(this.searchByUserEmail) &&
-          message.orderId.toString().match(this.searchByOrderNumber)
-        )
-      })
-    },
-    selectOrderDetail() {
-      console.log('this.k')
-      console.log(this.kkk)
-      // this.kkk++
-      return this.orderDatail.filter((orderDatailData, index) => {
-        return (
-          orderDatailData.email.toLowerCase().match(this.searchByUserEmail) &&
-          orderDatailData.orderId.toString().match(this.searchByOrderNumber) &&
-          orderDatailData.orderId.toString().match(this.id[2])
-        )
-      })
-    }
-  },
-  async mounted() {
+  async created() {
     await apiService.getUserList().then((data) => {
       const userDataList = data
       userDataList.forEach((userData: any) => {
-        // console.log('userData')
-        // console.log(userData)
         userData.order.forEach((order: any) => {
-          // console.log('order')
-          // console.log(order.orderId)
-          this.id.push(order.orderId)
           order.orderDetail.forEach(async (orderDetail: any) => {
             const product = orderDetail.product
             if (product.categoryId === 1) {
@@ -142,8 +198,6 @@ export default Vue.extend({
                 .then((response) => {
                   const data = response[0]
                   orderDetail.product.productDetail = {
-                    email: userData.email,
-                    orderId: order.orderId,
                     image: data.foodAndBevImage,
                     brand: data.foodAndBevBrand,
                     model: data.foodAndBevModel,
@@ -156,8 +210,6 @@ export default Vue.extend({
                 .then((response) => {
                   const data = response[0]
                   orderDetail.product.productDetail = {
-                    email: userData.email,
-                    orderId: order.orderId,
                     image: data.electronicImage,
                     brand: data.electronicBrand,
                     model: data.electronicModel,
@@ -170,8 +222,6 @@ export default Vue.extend({
                 .then((response) => {
                   const data = response[0]
                   orderDetail.product.productDetail = {
-                    email: userData.email,
-                    orderId: order.orderId,
                     image: data.furnitureImage,
                     brand: data.furnitureBrand,
                     model: data.furnitureModel,
@@ -179,24 +229,64 @@ export default Vue.extend({
                   }
                 })
             }
-            this.orderDatail.push(orderDetail.product.productDetail)
           })
         })
       })
-      // console.log('orderDatail')
-      // console.log(this.orderDatail)
+
+      // console.log(this.allData)
+      // if (this.allData.length === 0) {
+      //   console.log('aaasdasdsafsafasdfa')
+      //   this.allData = userDataList
+      // }
+
+      this.dataList = userDataList
+      this.messages = userDataList
+      // console.log(userDataList)
+      console.log('this.dataList1')
+      console.log(this.dataList)
+      this.isLoaded = true
       // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
       // console.log(userData[0].order[0].orderDetail[0].product)
     })
   },
-
-  async created() {
-    await apiService.getOrderList().then((res: any) => {
-      this.messages = res
-
-      // console.log(res)
-    })
+  computed: {
+    filteredMessage2() {
+      if (!this.isLoaded) return null
+      let listMessage = null
+      listMessage = this.dataList
+      const result = listMessage
+        .filter((message) => {
+          return message.order.some((order) => {
+            return (
+              order.orderId
+                .toString()
+                .match(this.searchByOrderNumber.toString()) &&
+              message.email
+                .toLowerCase()
+                .match(this.searchByUserEmail.toLowerCase())
+            )
+          })
+        })
+        .map((message) => {
+          const mappedData = Object.assign({}, message, {
+            order: message.order.filter((order) => {
+              return (
+                order.orderId
+                  .toString()
+                  .match(this.searchByOrderNumber.toString()) &&
+                message.email
+                  .toLowerCase()
+                  .match(this.searchByUserEmail.toLowerCase())
+              )
+            })
+          })
+          return mappedData
+        })
+      console.log(result)
+      return result
+    }
   },
+
   methods: {}
 })
 </script>
