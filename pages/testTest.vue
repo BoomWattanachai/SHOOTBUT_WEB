@@ -110,7 +110,13 @@
               </v-col>
               <v-col v-if="order.orderStatus === 1" cols="12" sm="1">
                 <div class="my-2 mt-n1">
-                  <v-btn small color="success" dark>Confirm Order</v-btn>
+                  <v-btn
+                    small
+                    color="success"
+                    dark
+                    @click="confirmOrder(order.orderId)"
+                    >Confirm Order</v-btn
+                  >
                 </div>
               </v-col>
               <v-col v-if="order.orderStatus === 2" cols="12" sm="1">
@@ -127,6 +133,8 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
+import firebase from 'firebase'
+
 import * as apiService from '@/store/authenModule/apiService'
 
 export default Vue.extend({
@@ -218,6 +226,7 @@ export default Vue.extend({
                       userData.order.length +
                       order.orderDetail.length
                   ) {
+                    console.log(userDataList)
                     this.dataList = userDataList
                     this.messages = userDataList
                     this.isLoaded = true
@@ -306,7 +315,14 @@ export default Vue.extend({
       // console.log(userData[0].order[0].orderDetail[0].product)
     })
   },
+  async mounted() {
+    console.log(await firebase.auth().currentUser)
+  },
 
-  methods: {}
+  methods: {
+    confirmOrder(orderId: number) {
+      console.log('orderId' + orderId)
+    }
+  }
 })
 </script>

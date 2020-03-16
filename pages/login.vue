@@ -10,9 +10,14 @@ export default {
   methods: {
     async signInPopup() {
       const provider = new firebase.auth.GoogleAuthProvider()
-      const result = await firebase.auth().signInWithPopup(provider)
-      const user = result.user
-      console.log(user)
+      await firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          this.$router.push('/testtest')
+          console.log(result)
+        })
+      // const user = result.user
     }
   }
 }
