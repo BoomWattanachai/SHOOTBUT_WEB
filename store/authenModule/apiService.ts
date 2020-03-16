@@ -47,6 +47,15 @@ export async function getUserList() {
   }
 }
 
+export async function getUserAddressByAddressId(addressId:number) {
+  try {
+    const res = await BaseUrl.get('/user-data/getUserAddressByAddressId/'+addressId)
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export async function checkUserRole(uuid:string) {
   try {
     const res = await BaseUrl.get('/user-data/checkUserRole/'+uuid)

@@ -45,7 +45,7 @@
 
               <v-col v-if="order.orderStatus === 1" cols="12" sm="2">
                 <v-card-text class="red--text text-no-wrap"
-                  >In Progress</v-card-text
+                  >Pending...</v-card-text
                 >
               </v-col>
 
@@ -81,7 +81,7 @@
                       ></v-img>
                     </v-card-text>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" sm="3">
                     <v-card-text>{{
                       orderDetail.product.productDetail.brand
                     }}</v-card-text>
@@ -92,9 +92,19 @@
                     }}</v-card-text>
                   </v-col>
                   <v-col cols="12" sm="1">
-                    <v-card-text>{{
-                      orderDetail.product.productDetail.price
-                    }}</v-card-text>
+                    <v-card-text
+                      >{{ orderDetail.product.productDetail.price }} x
+                      {{ orderDetail.quantity }}
+                    </v-card-text>
+                  </v-col>
+                  <v-col cols="12" sm="1">
+                    <v-card-text
+                      >Total:
+                      {{
+                        orderDetail.product.productDetail.price *
+                          orderDetail.quantity
+                      }}</v-card-text
+                    >
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -103,7 +113,14 @@
           <v-expansion-panel-content>
             <v-divider></v-divider>
             <v-row class="mt-3 mb-n4">
-              <v-col cols="12" sm="11">
+              <v-col cols="12" sm="8">
+                <p class="font-weight-black text-left">
+                  Shipping Address: {{ message.firstName }}
+                  {{ message.lastName }} , {{ order.addressData }} (
+                  {{ order.orderDateTime | moment('DD/MM/YYYY') }} )
+                </p>
+              </v-col>
+              <v-col cols="12" sm="3">
                 <p class="font-weight-black text-right">
                   Total: {{ order.totalPrice }}
                 </p>
@@ -133,8 +150,11 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
+
+// import moment from 'moment'
 // import firebase from 'firebase'
 import * as apiService from '@/store/authenModule/apiService'
+Vue.use(require('vue-moment'))
 export default Vue.extend({
   data() {
     return {
@@ -193,8 +213,23 @@ export default Vue.extend({
       console.log(userDataList)
       userDataList.forEach((userData: any) => {
         console.log('log1')
-        userData.order.forEach((order: any) => {
+        userData.order.forEach(async (order: any) => {
           console.log('log2')
+          await apiService
+            .getUserAddressByAddressId(order.addressId)
+            .then((response) => {
+              order.addressData =
+                response.addressNumber +
+                ' ' +
+                response.district +
+                ' ' +
+                response.subDistrict +
+                ' ' +
+                response.province +
+                ' ' +
+                response.zipCode
+            })
+
           order.orderDetail.forEach(async (orderDetail: any) => {
             console.log('log3')
             const product = orderDetail.product
@@ -331,6 +366,29 @@ export default Vue.extend({
         })
         .then(() => {
           this.dataList = arrayData
+        })
+    },
+
+    async getAddress(i: number, j: number) {
+      const arrayData = this.dataList
+      const addressId = arrayData[i].order[j].addressId
+      await apiService
+        .getUserAddressByAddressId(addressId)
+        .then((response) => {
+          return (
+            response.addressNumber +
+            ' ' +
+            response.district +
+            ' ' +
+            response.subDistrict +
+            ' ' +
+            response.province +
+            ' ' +
+            response.zipCode
+          )
+        })
+        .then((data) => {
+          return data
         })
     }
   }
