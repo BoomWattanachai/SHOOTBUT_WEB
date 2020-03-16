@@ -1,13 +1,13 @@
 import firebase from 'firebase'
 const firebaseConfig = {
-  apiKey: 'AIzaSyCfM-A4v4i_q2dTnAWGdFJzdpaZE74yCh8',
-  authDomain: 'automl-bpdesign.firebaseapp.com',
-  databaseURL: 'https://automl-bpdesign.firebaseio.com',
-  projectId: 'automl-bpdesign',
-  storageBucket: 'automl-bpdesign.appspot.com',
-  messagingSenderId: '731239503387',
-  appId: '1:731239503387:web:0223277efcf874f1d30abe',
-  measurementId: 'G-RS2J11T50C'
+  apiKey: 'AIzaSyDDq5QXQoqw6VVkScYws7eUdDKOaQ_tPmY',
+  authDomain: 'shootbuy.firebaseapp.com',
+  databaseURL: 'https://shootbuy.firebaseio.com',
+  projectId: 'shootbuy',
+  storageBucket: 'shootbuy.appspot.com',
+  messagingSenderId: '1097809184675',
+  appId: '1:1097809184675:web:da90090e2a388cfc29bc16',
+  measurementId: 'G-TBKHW0D83M'
 }
 let app = null
 // prevent initializing firebase more than once
