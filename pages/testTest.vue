@@ -110,7 +110,13 @@
               </v-col>
               <v-col v-if="order.orderStatus === 1" cols="12" sm="1">
                 <div class="my-2 mt-n1">
-                  <v-btn small color="success" dark>Confirm Order</v-btn>
+                  <v-btn
+                    small
+                    color="success"
+                    dark
+                    @click="confirmProductOrder(i, j)"
+                    >Confirm Order</v-btn
+                  >
                 </div>
               </v-col>
               <v-col v-if="order.orderStatus === 2" cols="12" sm="1">
@@ -127,10 +133,8 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import firebase from 'firebase'
-
+// import firebase from 'firebase'
 import * as apiService from '@/store/authenModule/apiService'
-
 export default Vue.extend({
   data() {
     return {
@@ -147,7 +151,7 @@ export default Vue.extend({
   },
   computed: {
     filteredMessage2() {
-      if (!this.isLoaded) return null
+      // if (!this.isLoaded) return null
       let listMessage = null
       listMessage = this.dataList
       const result = listMessage
@@ -186,6 +190,7 @@ export default Vue.extend({
     let count = 0
     await apiService.getUserList().then((data) => {
       const userDataList = data
+      console.log(userDataList)
       userDataList.forEach((userData: any) => {
         console.log('log1')
         userData.order.forEach((order: any) => {
@@ -309,9 +314,24 @@ export default Vue.extend({
     })
   },
   async mounted() {
-    console.log(await firebase.auth().currentUser)
+    // console.log(await firebase.auth().currentUser)
   },
 
-  methods: {}
+  methods: {
+    async confirmProductOrder(i: number, j: number) {
+      const arrayData = this.dataList
+      const orderId = arrayData[i].order[j].orderId
+      await apiService
+        .confirmProductOrder({
+          orderId
+        })
+        .then(() => {
+          arrayData[i].order[j].orderStatus = 2
+        })
+        .then(() => {
+          this.dataList = arrayData
+        })
+    }
+  }
 })
 </script>

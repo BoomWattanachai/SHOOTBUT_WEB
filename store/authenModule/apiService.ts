@@ -1,5 +1,5 @@
 import { BaseUrl } from '../apiConfig'
-import { SubmitDTO, UserListData, OrderList } from './authenDTO'
+import { SubmitDTO, UserListData, OrderList, Order, OrderId, User } from './authenDTO'
 
 export async function getOrderList(): Promise<OrderList[] | undefined> {
   try {
@@ -14,8 +14,8 @@ export async function getOrderList(): Promise<OrderList[] | undefined> {
     // }
 
     res2.forEach(function(order) {
-    //   console.log('order')
-    //   console.log(order)
+      //   console.log('order')
+      //   console.log(order)
       order.order.forEach(function(orderData) {
         const data = {} as OrderList
         // console.log('orderData')
@@ -41,6 +41,15 @@ export async function getOrderList(): Promise<OrderList[] | undefined> {
 export async function getUserList() {
   try {
     const res = await BaseUrl.get('/user-data/getUserList')
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function checkUserRole(uuid:string) {
+  try {
+    const res = await BaseUrl.get('/user-data/checkUserRole/'+uuid)
     return res.data
   } catch (e) {
     console.error(e)
@@ -83,6 +92,24 @@ export async function selectProductElectronic(productId: string) {
     const res = await BaseUrl.get(
       '/user-data/selectProductElectronic/' + productId
     )
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function ifUserExist(user: User) {
+  try {
+    const res = await BaseUrl.post('/user-data/ifUserExist', user)
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function confirmProductOrder(order: OrderId) {
+  try {
+    const res = await BaseUrl.post('/product-order/confirmProductOrder', order)
     return res.data
   } catch (e) {
     console.error(e)
