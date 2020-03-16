@@ -36,7 +36,10 @@
               </v-col>
 
               <v-col cols="12" sm="3" class="ml-12">
-                <v-card-text>{{ order.orderId }}</v-card-text>
+                <v-chip class="ma-2" color="#8facf7" label text-color="white">
+                  <v-icon left>mdi-label</v-icon>
+                  Order {{ order.orderId }}
+                </v-chip>
               </v-col>
 
               <v-col cols="12" sm="4" class="mr-6 ml-n10">
@@ -44,15 +47,21 @@
               </v-col>
 
               <v-col v-if="order.orderStatus === 1" cols="12" sm="2">
-                <v-card-text class="red--text text-no-wrap"
-                  >In Progress</v-card-text
-                >
+                <v-chip class="ma-2" color="orange" text-color="white">
+                  <v-avatar left>
+                    <v-icon>mdi-clock</v-icon>
+                  </v-avatar>
+                  Pending
+                </v-chip>
               </v-col>
 
               <v-col v-if="order.orderStatus === 2" cols="12" sm="2">
-                <v-card-text class="green--text text-no-wrap"
-                  >Success</v-card-text
-                >
+                <v-chip class="ma-2" color="teal" text-color="white">
+                  <v-avatar left>
+                    <v-icon>mdi-checkbox-marked-circle</v-icon>
+                  </v-avatar>
+                  Success
+                </v-chip>
               </v-col>
 
               <v-col cols="12" sm="1">
@@ -129,6 +138,9 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-row>
+    <v-snackbar v-model="success" :timeout="timeout" color="green"
+      >Success
+    </v-snackbar>
   </v-container>
 </template>
 <script lang="ts">
@@ -140,6 +152,8 @@ export default Vue.extend({
     return {
       //   itemsPerPageArray: [4, 8, 12],
       messages: [],
+      timeout: 1200,
+      success: false,
       dataList: [],
       allData: [],
       lorem: 'aaaaaaa',
@@ -328,6 +342,7 @@ export default Vue.extend({
         })
         .then(() => {
           arrayData[i].order[j].orderStatus = 2
+          this.success = true
         })
         .then(() => {
           this.dataList = arrayData
