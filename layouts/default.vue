@@ -5,7 +5,7 @@
       <v-spacer />
 
       <template>
-        <div class="text-right" v-if="userData">
+        <div v-if="userData" class="text-right">
           <v-menu
             v-model="menu"
             :close-on-content-click="false"
@@ -14,16 +14,16 @@
             offset-x
           >
             <template v-slot:activator="{ on }">
-              <v-btn color="indigo" dark v-on="on">
-                Menu as Popover
-              </v-btn>
+              <v-list-item-avatar v-on="on">
+                <img :src="userData.photoURL" />
+              </v-list-item-avatar>
             </template>
 
             <v-card>
               <v-list>
                 <v-list-item>
                   <v-list-item-avatar>
-                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" />
+                    <img :src="userData.photoURL" />
                   </v-list-item-avatar>
 
                   <v-list-item-content>
