@@ -64,7 +64,7 @@ export default Vue.extend({
   async created() {
     await aa.getUserList().then((res: any) => {
       this.messages = res
-      console.log(res)
+      // console.log(res)
     })
   },
   methods: {
@@ -75,7 +75,7 @@ export default Vue.extend({
           addressId: this.addressId
         })
         .then((res: any) => {
-          console.log(res)
+          // console.log(res)
         })
     },
     test() {

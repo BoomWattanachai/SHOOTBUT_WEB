@@ -1,10 +1,13 @@
 <template>
   <div class="container">
-    <button @click="signInPopup">Sign In</button>
-    <br />
+    <v-btn x-large color="#4285f4" dark @click="signInPopup">
+      <v-icon dark left>mdi-google</v-icon>Continue with Google&ensp;
+    </v-btn>
+    <!-- <button @click="signInPopup">Sign In</button> -->
+    <!-- <br />
     <button @click="logUserData">Log User Data</button>
     <br />
-    <button @click="signOutBtn">SignOut</button>
+    <button @click="signOutBtn">SignOut</button> -->
 
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
@@ -55,13 +58,13 @@ export default {
         })
         .catch((e) => {
           this.$snotify.error(e.message)
-          console.log(e)
+          // console.log(e)
         })
       // const user = result.user
     },
     async logUserData() {
       await firebase.auth().onAuthStateChanged((user) => {
-        console.log(user)
+        // console.log(user)
       })
     },
     async signOutBtn() {

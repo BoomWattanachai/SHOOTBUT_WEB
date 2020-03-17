@@ -1,6 +1,13 @@
 <template>
   <div class="container">
-    <button @click="signInPopup">Sign In</button>
+    <div class="text-center">
+      <div class="my-2">
+        <v-btn x-large color="white" dark @click="signInPopup"
+          >Extra large Button</v-btn
+        >
+      </div>
+    </div>
+    <!-- <button @click="signInPopup">Sign In</button> -->
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
       <v-btn color="blue" text @click="snackbar = false">
@@ -28,9 +35,11 @@ export default {
         .signInWithPopup(provider)
         .then((result) => {
           const displayName = result.user.displayName
-          console.log(displayName)
+          localStorage.setItem('user', 'aaa')
+          localStorage.setItem('lastname', 'Smith')
+          // console.log(displayName)
           const convertedName = displayName.split(' ')
-          console.log(convertedName)
+          // console.log(convertedName)
           return apiService.ifUserExist({
             uuid: result.user.uid,
             email: result.user.email,
@@ -51,7 +60,7 @@ export default {
         })
         .catch((e) => {
           this.$snotify.error(e.message)
-          console.log(e)
+          // console.log(e)
         })
       // const user = result.user
     }

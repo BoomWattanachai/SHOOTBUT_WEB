@@ -134,7 +134,7 @@ export default Vue.extend({
           // newArrayData.push({ id: 'dd' })
         })
       })
-      console.log(newArrayData)
+      // console.log(newArrayData)
 
       // console.log(result)
 
@@ -149,7 +149,7 @@ export default Vue.extend({
 
   async created() {
     let userDataList = null
-    console.log('call')
+    // console.log('call')
     await apiService
       .getUserListPik()
       .then((data) => {
@@ -158,7 +158,7 @@ export default Vue.extend({
           userData.order.forEach((order: any) => {
             order.orderDetail.forEach((orderDetail: any) => {
               const product = orderDetail.product
-              console.log('orderDetail')
+              // console.log('orderDetail')
               if (product.categoryId === 1) {
                 return apiService.selectProductFoodData(product.productId)
                 // .then((response) => {
@@ -203,13 +203,13 @@ export default Vue.extend({
             })
           })
         })
-        console.log('almost end')
+        // console.log('almost end')
         // console.log(userDataList)
         // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
         // console.log(userData[0].order[0].orderDetail[0].product)
       })
       .then((response) => {
-        console.log(response)
+        // console.log(response)
         // this.dataList = userDataList
         // this.messages = userDataList
         // this.isLoaded = true

@@ -218,7 +218,7 @@ export default Vue.extend({
           })
           return mappedData
         })
-      console.log(result)
+      // console.log(result)
       return result
     }
   },
@@ -279,8 +279,8 @@ export default Vue.extend({
       this.dataList = userDataList
       this.messages = userDataList
       // console.log(userDataList)
-      console.log('this.dataList1')
-      console.log(this.dataList)
+      // console.log('this.dataList1')
+      // console.log(this.dataList)
       this.isLoaded = true
       // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
       // console.log(userData[0].order[0].orderDetail[0].product)
