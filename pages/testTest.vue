@@ -221,147 +221,84 @@ export default Vue.extend({
     }
   },
   async created() {
-    let count = 0
-    await apiService.getUserList().then((data) => {
-      const userDataList = data
-      console.log(userDataList)
-      userDataList.forEach((userData: any) => {
-        console.log('log1')
-        userData.order.forEach(async (order: any) => {
-          console.log('log2')
-          await apiService
-            .getUserAddressByAddressId(order.addressId)
-            .then((response) => {
-              order.addressData =
-                response.addressNumber +
-                ' ' +
-                response.district +
-                ' ' +
-                response.subDistrict +
-                ' ' +
-                response.province +
-                ' ' +
-                response.zipCode
-            })
+    let userDataList: any
+    await apiService
+      .getUserList()
+      .then((data) => {
+        userDataList = data
+        const promises = []
+        userDataList.forEach((userData: any) => {
+          userData.order.forEach((order: any) => {
+            apiService
+              .getUserAddressByAddressId(order.addressId)
+              .then((response) => {
+                order.addressData =
+                  response.addressNumber +
+                  ' ' +
+                  response.district +
+                  ' ' +
+                  response.subDistrict +
+                  ' ' +
+                  response.province +
+                  ' ' +
+                  response.zipCode
+              })
 
-          order.orderDetail.forEach(async (orderDetail: any) => {
-            console.log('log3')
-            const product = orderDetail.product
-            if (product.categoryId === 1) {
-              await apiService
-                .selectProductFoodData(product.productId)
-                .then((response) => {
-                  console.log('log6')
-                  const data = response[0]
-                  orderDetail.product.productDetail = {
-                    image: data.foodAndBevImage,
-                    brand: data.foodAndBevBrand,
-                    model: data.foodAndBevModel,
-                    price: data.foodAndBevPrice
-                  }
-                })
-                .then(() => {
-                  // console.log('log4')
-                  // console.log('111111111')
-                  // console.log(count)
-                  count++
-                  // console.log('222222222')
-                  // console.log(count)
-                  // console.log('----------------------------')
-                  if (
-                    count ===
-                    userDataList.length +
-                      userData.order.length +
-                      order.orderDetail.length
-                  ) {
-                    console.log(userDataList)
-                    this.dataList = userDataList
-                    this.messages = userDataList
-                    this.isLoaded = true
-                  }
-                })
-            } else if (product.categoryId === 2) {
-              await apiService
-                .selectProductElectronic(product.productId)
-                .then((response) => {
-                  const data = response[0]
-                  orderDetail.product.productDetail = {
-                    image: data.electronicImage,
-                    brand: data.electronicBrand,
-                    model: data.electronicModel,
-                    price: data.electronicPrice
-                  }
-                })
-                .then(() => {
-                  // console.log('log4')
-                  // console.log('111111111')
-                  // console.log(count)
-                  count++
-                  // console.log('222222222')
-                  // console.log(count)
-                  // console.log('----------------------------')
-                  if (
-                    count ===
-                    userDataList.length +
-                      userData.order.length +
-                      order.orderDetail.length
-                  ) {
-                    this.dataList = userDataList
-                    this.messages = userDataList
-                    this.isLoaded = true
-                  }
-                })
-            } else if (product.categoryId === 3) {
-              await apiService
-                .selectProductFurniture(product.productId)
-                .then((response) => {
-                  const data = response[0]
-                  orderDetail.product.productDetail = {
-                    image: data.furnitureImage,
-                    brand: data.furnitureBrand,
-                    model: data.furnitureModel,
-                    price: data.furniturePrice
-                  }
-                })
-                .then(() => {
-                  // console.log('log4')
-                  // console.log('111111111')
-                  // console.log(count)
-                  count++
-                  // console.log('222222222')
-                  // console.log(count)
-                  // console.log('----------------------------')
-                  if (
-                    count ===
-                    userDataList.length +
-                      userData.order.length +
-                      order.orderDetail.length
-                  ) {
-                    this.dataList = userDataList
-                    this.messages = userDataList
-                    this.isLoaded = true
-                  }
-                })
-            }
+            order.orderDetail.forEach((orderDetail: any) => {
+              const product = orderDetail.product
+              if (product.categoryId === 1) {
+                promises.push(
+                  apiService
+                    .selectProductFoodData(product.productId)
+                    .then((response) => {
+                      const data = response[0]
+                      orderDetail.product.productDetail = {
+                        image: data.foodAndBevImage,
+                        brand: data.foodAndBevBrand,
+                        model: data.foodAndBevModel,
+                        price: data.foodAndBevPrice
+                      }
+                    })
+                )
+              } else if (product.categoryId === 2) {
+                promises.push(
+                  apiService
+                    .selectProductElectronic(product.productId)
+                    .then((response) => {
+                      const data = response[0]
+                      orderDetail.product.productDetail = {
+                        image: data.electronicImage,
+                        brand: data.electronicBrand,
+                        model: data.electronicModel,
+                        price: data.electronicPrice
+                      }
+                    })
+                )
+              } else if (product.categoryId === 3) {
+                promises.push(
+                  apiService
+                    .selectProductFurniture(product.productId)
+                    .then((response) => {
+                      const data = response[0]
+                      orderDetail.product.productDetail = {
+                        image: data.furnitureImage,
+                        brand: data.furnitureBrand,
+                        model: data.furnitureModel,
+                        price: data.furniturePrice
+                      }
+                    })
+                )
+              }
+            })
           })
         })
+        return Promise.all(promises)
       })
-      console.log('log5')
-      // console.log(this.allData)
-      // if (this.allData.length === 0) {
-      //   console.log('aaasdasdsafsafasdfa')
-      //   this.allData = userDataList
-      // }
-
-      // this.dataList = this.allData
-      // this.messages = userDataList
-      // console.log(userDataList)
-      // console.log('this.dataList1')
-      // console.log(this.allData[0])
-      // this.isLoaded = true
-      // userData[0].order[0].orderDetail[0].product.productDetail = this.testObject
-      // console.log(userData[0].order[0].orderDetail[0].product)
-    })
+      .then(() => {
+        this.dataList = userDataList
+        this.messages = userDataList
+        this.isLoaded = true
+      })
   },
   async mounted() {
     // console.log(await firebase.auth().currentUser)
