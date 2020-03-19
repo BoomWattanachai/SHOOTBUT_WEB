@@ -47,7 +47,7 @@
               </v-col>
 
               <v-col v-if="order.orderStatus === 1" cols="12" sm="2">
-                <v-chip class="ma-2" color="orange" text-color="white">
+                <v-chip class="ma-2" color="red" text-color="white">
                   <v-avatar left>
                     <v-icon>mdi-clock</v-icon>
                   </v-avatar>
@@ -56,6 +56,15 @@
               </v-col>
 
               <v-col v-if="order.orderStatus === 2" cols="12" sm="2">
+                <v-chip class="ma-2" color="orange" text-color="white">
+                  <v-avatar left>
+                    <v-icon>mdi-truck-delivery-outline</v-icon>
+                  </v-avatar>
+                  Shipping
+                </v-chip>
+              </v-col>
+
+              <v-col v-if="order.orderStatus === 3" cols="12" sm="2">
                 <v-chip class="ma-2" color="teal" text-color="white">
                   <v-avatar left>
                     <v-icon>mdi-checkbox-marked-circle</v-icon>
@@ -141,13 +150,17 @@
                     color="success"
                     dark
                     @click="confirmProductOrder(i, j)"
-                    >Confirm Order</v-btn
+                    >Assign Order</v-btn
                   >
                 </div>
               </v-col>
-              <v-col v-if="order.orderStatus === 2" cols="12" sm="1">
+              <v-col
+                v-if="order.orderStatus === 2 || order.orderStatus === 3"
+                cols="12"
+                sm="1"
+              >
                 <div class="my-1 mt-n1">
-                  <v-btn small disabled>Confirm Order</v-btn>
+                  <v-btn small disabled>Assign Order</v-btn>
                 </div>
               </v-col>
             </v-row>

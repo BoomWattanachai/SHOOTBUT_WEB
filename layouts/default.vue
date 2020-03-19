@@ -105,7 +105,7 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(() => {
-          this.$router.push('/')
+          this.$router.push('/adminLogin')
         })
     }
   }

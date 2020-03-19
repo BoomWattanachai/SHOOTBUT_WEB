@@ -56,9 +56,9 @@ export async function getUserAddressByAddressId(addressId:number) {
   }
 }
 
-export async function checkUserRole(uuid:string) {
+export async function ifAdminExist(uuid:string) {
   try {
-    const res = await BaseUrl.get('/user-data/checkUserRole/'+uuid)
+    const res = await BaseUrl.get('/user-data/ifAdminExist/'+uuid)
     return res.data
   } catch (e) {
     console.error(e)
