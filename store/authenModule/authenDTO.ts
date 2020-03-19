@@ -51,3 +51,9 @@ export interface User {
   lastName: string
   role: number
 }
+
+export interface SellerOrder {
+  sellerUuid: string
+  orderId: number
+  assignBy: string
+}

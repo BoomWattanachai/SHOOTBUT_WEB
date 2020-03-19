@@ -149,7 +149,7 @@
                     small
                     color="success"
                     dark
-                    @click="confirmProductOrder(i, j)"
+                    @click="getSeller(message.uuid, order.orderId, i, j)"
                     >Assign Order</v-btn
                   >
                 </div>
@@ -171,6 +171,90 @@
     <v-snackbar v-model="success" :timeout="timeout" color="green"
       >Success
     </v-snackbar>
+    <template>
+      <v-row justify="center">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Assign Order</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <!-- <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      label="Legal first name*"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      label="Legal middle name"
+                      hint="example of helper text only on focus"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      label="Legal last name*"
+                      hint="example of persistent helper text"
+                      persistent-hint
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field label="Email*" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Password*"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-col> -->
+                  <v-col cols="12" sm="12">
+                    <v-select
+                      v-model="seller"
+                      :items="sellerListItem"
+                      label="Email's Sender"
+                    ></v-select>
+                  </v-col>
+                  <!-- <v-col cols="12" sm="6">
+                    <v-autocomplete
+                      :items="[
+                        'Skiing',
+                        'Ice hockey',
+                        'Soccer',
+                        'Basketball',
+                        'Hockey',
+                        'Reading',
+                        'Writing',
+                        'Coding',
+                        'Basejump'
+                      ]"
+                      label="Interests"
+                      multiple
+                    ></v-autocomplete>
+                  </v-col> -->
+                </v-row>
+              </v-container>
+              <!-- <small>*indicates required field</small> -->
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false"
+                >Close</v-btn
+              >
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="confirmProductOrder(), (dialog = false)"
+                >Save</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </template>
   </v-container>
 </template>
 <script lang="ts">
@@ -187,6 +271,9 @@ export default Vue.extend({
   data() {
     return {
       //   itemsPerPageArray: [4, 8, 12],
+      seller: '',
+      orderId: 0,
+      dialog: false,
       messages: [],
       timeout: 1200,
       success: false,
@@ -198,7 +285,19 @@ export default Vue.extend({
       order: [],
       isLoaded: false,
       userData: {
-        displayName: String
+        displayName: '',
+        uid: ''
+      },
+      sellerListItem: [],
+      sellerListUuid: [],
+      sellerOrder: {
+        sellerUuid: String,
+        orderId: Number,
+        assignBy: String
+      },
+      tempInex: {
+        indexI: Number,
+        indexJ: Number
       }
     }
   },
@@ -337,20 +436,60 @@ export default Vue.extend({
   },
 
   methods: {
-    async confirmProductOrder(i: number, j: number) {
-      const arrayData = this.dataList
-      const orderId = arrayData[i].order[j].orderId
-      await apiService
-        .confirmProductOrder({
-          orderId
+    test() {
+      if (this.seller !== '') {
+        console.log('aasdasdasfdasfasd')
+        console.log(this.seller)
+      }
+    },
+    async getSeller(ownerOrder: String, orderId: Number, i: Number, j: Number) {
+      this.sellerListItem = []
+      this.sellerListUuid = []
+      this.orderId = orderId
+      this.tempInex.indexI = i
+      this.tempInex.indexJ = j
+      console.log('testFunction')
+      console.log(orderId)
+      console.log(this.orderId)
+      await apiService.getSellerList(ownerOrder).then((response) => {
+        response.forEach((seler: any) => {
+          this.sellerListItem.push(seler.sellerEmail)
+          this.sellerListUuid.push(seler.sellerUuid)
         })
-        .then(() => {
-          arrayData[i].order[j].orderStatus = 2
-          this.success = true
+
+        console.log(this.sellerListItem)
+        this.dialog = true
+      })
+    },
+    async confirmProductOrder() {
+      if (this.seller !== '') {
+        let tempSellerUuid = ''
+
+        this.sellerListItem.forEach((seller, index) => {
+          if (seller === this.seller) {
+            tempSellerUuid = this.sellerListUuid[index]
+          }
         })
-        .then(() => {
-          this.dataList = arrayData
-        })
+
+        const arrayData = this.dataList
+        this.sellerOrder.sellerUuid = tempSellerUuid
+        this.sellerOrder.orderId = this.orderId
+        this.sellerOrder.assignBy = this.userData.uid
+
+        console.log('this.sellerOrder')
+        console.log(this.sellerOrder)
+        await apiService
+          .assignSellerOrder(this.sellerOrder)
+          .then(() => {
+            arrayData[this.tempInex.indexI].order[
+              this.tempInex.indexJ
+            ].orderStatus = 2
+            this.success = true
+          })
+          .then(() => {
+            this.dataList = arrayData
+          })
+      }
     }
   }
 })

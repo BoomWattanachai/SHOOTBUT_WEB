@@ -1,5 +1,13 @@
 import { BaseUrl } from '../apiConfig'
-import { SubmitDTO, UserListData, OrderList, Order, OrderId, User } from './authenDTO'
+import {
+  SubmitDTO,
+  UserListData,
+  OrderList,
+  Order,
+  OrderId,
+  User,
+  SellerOrder
+} from './authenDTO'
 
 export async function getOrderList(): Promise<OrderList[] | undefined> {
   try {
@@ -47,18 +55,31 @@ export async function getUserList() {
   }
 }
 
-export async function getUserAddressByAddressId(addressId:number) {
+export async function getSellerList(ownerOrder: String) {
   try {
-    const res = await BaseUrl.get('/user-data/getUserAddressByAddressId/'+addressId)
+    const res = await BaseUrl.get('/user-data/getSellerList/' + ownerOrder)
+    console.log('API')
+    console.log(res)
     return res.data
   } catch (e) {
     console.error(e)
   }
 }
 
-export async function ifAdminExist(uuid:string) {
+export async function getUserAddressByAddressId(addressId: number) {
   try {
-    const res = await BaseUrl.get('/user-data/ifAdminExist/'+uuid)
+    const res = await BaseUrl.get(
+      '/user-data/getUserAddressByAddressId/' + addressId
+    )
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function ifAdminExist(uuid: string) {
+  try {
+    const res = await BaseUrl.get('/user-data/ifAdminExist/' + uuid)
     return res.data
   } catch (e) {
     console.error(e)
@@ -110,6 +131,21 @@ export async function selectProductElectronic(productId: string) {
 export async function ifUserExist(user: User) {
   try {
     const res = await BaseUrl.post('/user-data/ifUserExist', user)
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function assignSellerOrder(sellerOrder: SellerOrder) {
+  try {
+    // console.log('APIassignSellerOrderTEST')
+    // console.log(sellerOrder)
+
+    const res = await BaseUrl.post(
+      '/product-order/assignSellerOrder',
+      sellerOrder
+    )
     return res.data
   } catch (e) {
     console.error(e)

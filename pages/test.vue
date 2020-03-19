@@ -145,7 +145,11 @@
               </v-col>
               <v-col v-if="order.orderStatus === 1" cols="12" sm="1">
                 <div class="my-2 mt-n1">
-                  <v-btn small color="success" dark @click="testtest()"
+                  <v-btn
+                    small
+                    color="success"
+                    dark
+                    @click="getSeller(message.uuid, order.orderId, i, j)"
                     >Assign Order</v-btn
                   >
                 </div>
@@ -209,8 +213,8 @@
                   </v-col> -->
                   <v-col cols="12" sm="12">
                     <v-select
-                      v-model="sender"
-                      :items="['0-17', '18-29', '30-54', '54+']"
+                      v-model="seller"
+                      :items="sellerListItem"
                       label="Email's Sender"
                     ></v-select>
                   </v-col>
@@ -243,7 +247,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="test(), (dialog = false)"
+                @click="confirmProductOrder(), (dialog = false)"
                 >Save</v-btn
               >
             </v-card-actions>
@@ -267,7 +271,8 @@ export default Vue.extend({
   data() {
     return {
       //   itemsPerPageArray: [4, 8, 12],
-      sender: String,
+      seller: '',
+      orderId: 0,
       dialog: false,
       messages: [],
       timeout: 1200,
@@ -280,7 +285,19 @@ export default Vue.extend({
       order: [],
       isLoaded: false,
       userData: {
-        displayName: String
+        displayName: '',
+        uid: ''
+      },
+      sellerListItem: [],
+      sellerListUuid: [],
+      sellerOrder: {
+        sellerUuid: '',
+        orderId: 0,
+        assignBy: ''
+      },
+      tempInex: {
+        indexI: -1,
+        indexJ: -1
       }
     }
   },
@@ -420,26 +437,59 @@ export default Vue.extend({
 
   methods: {
     test() {
-      console.log('aasdasdasfdasfasd')
-      console.log(this.sender)
+      if (this.seller !== '') {
+        console.log('aasdasdasfdasfasd')
+        console.log(this.seller)
+      }
     },
-    testtest() {
-      this.dialog = true
+    async getSeller(ownerOrder: String, orderId: Number, i: Number, j: Number) {
+      this.sellerListItem = []
+      this.sellerListUuid = []
+      this.orderId = orderId
+      this.tempInex.indexI = i
+      this.tempInex.indexJ = j
+      console.log('testFunction')
+      console.log(orderId)
+      console.log(this.orderId)
+      await apiService.getSellerList(ownerOrder).then((response) => {
+        response.forEach((seler: any) => {
+          this.sellerListItem.push(seler.sellerEmail)
+          this.sellerListUuid.push(seler.sellerUuid)
+        })
+
+        console.log(this.sellerListItem)
+        this.dialog = true
+      })
     },
-    async confirmProductOrder(i: number, j: number) {
-      const arrayData = this.dataList
-      const orderId = arrayData[i].order[j].orderId
-      await apiService
-        .confirmProductOrder({
-          orderId
+    async confirmProductOrder() {
+      if (this.seller !== '') {
+        let tempSellerUuid = ''
+
+        this.sellerListItem.forEach((seller, index) => {
+          if (seller === this.seller) {
+            tempSellerUuid = this.sellerListUuid[index]
+          }
         })
-        .then(() => {
-          arrayData[i].order[j].orderStatus = 2
-          this.success = true
-        })
-        .then(() => {
-          this.dataList = arrayData
-        })
+
+        const arrayData = this.dataList
+        this.sellerOrder.sellerUuid = tempSellerUuid
+        this.sellerOrder.orderId = this.orderId
+        this.sellerOrder.assignBy = this.userData.uid
+
+        console.log('this.sellerOrder')
+        console.log(this.sellerOrder)
+        await apiService
+          .assignSellerOrder(this.sellerOrder)
+          .then(() => {
+            arrayData[this.tempInex.indexI].order[
+              this.tempInex.indexJ
+            ].orderStatus = 2
+            this.success = true
+          })
+          .then(() => {
+            this.dataList = arrayData
+          })
+      }
     }
   }
 })
