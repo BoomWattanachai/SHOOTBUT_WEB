@@ -37,8 +37,12 @@ export default {
     password: '',
     snackbar: false,
     text: 'Only admin allowed!.',
-    timeout: 2000
+    timeout: 2000,
+    userData: {
+      displayName: String
+    }
   }),
+  async mounted() {},
   methods: {
     signInAdmin() {
       console.log('Login')

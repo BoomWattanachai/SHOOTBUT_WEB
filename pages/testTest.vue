@@ -178,7 +178,7 @@ import Vue from 'vue'
 
 // import moment from 'moment'
 // import firebase from 'firebase'
-// import firebase from 'firebase'
+import firebase from 'firebase'
 import axios from 'axios'
 import * as apiService from '@/store/authenModule/apiService'
 
@@ -242,15 +242,15 @@ export default Vue.extend({
   async created() {
     let userDataList: any
 
-    // await firebase.auth().onAuthStateChanged((user) => {
-    //   this.userData = user
-    //   if (this.userData === null) this.$router.push('/')
-    //   console.log('this.userData')
-    //   console.log(this.userData)
-    // })
+    await firebase.auth().onAuthStateChanged((user) => {
+      this.userData = user
+      if (this.userData === null) this.$router.push('/adminLogin')
+      console.log('this.userData')
+      console.log(this.userData)
+    })
     // const retrievedObject = localStorage.getItem('user')
-    console.log('retrievedObject')
-    console.log(localStorage.getItem('user'))
+    // console.log('retrievedObject')
+    // console.log(localStorage.getItem('user'))
 
     await apiService
       .getUserList()
