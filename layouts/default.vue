@@ -15,7 +15,9 @@
           >
             <template v-slot:activator="{ on }">
               <v-list-item-avatar v-on="on">
-                <img :src="userData.photoURL" />
+                <v-img
+                  src="https://btwinmylife.com/wp-content/uploads/2018/10/feng-timo9.jpg"
+                />
               </v-list-item-avatar>
             </template>
 
@@ -23,7 +25,9 @@
               <v-list>
                 <v-list-item>
                   <v-list-item-avatar>
-                    <img :src="userData.photoURL" />
+                    <v-img
+                      src="https://btwinmylife.com/wp-content/uploads/2018/10/feng-timo9.jpg"
+                    />
                   </v-list-item-avatar>
 
                   <v-list-item-content>
