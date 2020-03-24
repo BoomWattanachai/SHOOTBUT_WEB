@@ -1,86 +1,99 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-expansion-panels popout>
-        <v-expansion-panel
-          v-for="(message, i) in messages"
-          :key="i"
-          hide-actions
-        >
-          <v-expansion-panel-header>
-            <v-row align="center" class="spacer" no-gutters>
-              <v-col cols="4" sm="2" md="1">
-                <v-avatar size="36px"> </v-avatar>
+  <v-app style="background-color : #194375">
+    <v-layout
+      ><v-flex d-flex justify-center align-self-center>
+        <v-card class="d-inline-block mx-auto">
+          <v-container>
+            <v-row justify="space-between">
+              <v-col cols="12" md="6">
+                <v-img
+                  height="500"
+                  width="500"
+                  src="https://men.mthai.com/app/uploads/2018/10/201704091101059430.jpg"
+                ></v-img>
               </v-col>
 
-              <v-col class="hidden-xs-only" sm="5" md="3">
-                <strong v-html="message.productId"></strong>
-              </v-col>
+              <v-col cols="12" md="6" class="text-center pl-0">
+                <v-row
+                  class="flex-column ma-0 fill-height px-4"
+                  justify="center"
+                >
+                  <h1 class="text-center mb-4">Sign in</h1>
+                  <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+                    <v-text-field
+                      v-model="email"
+                      append-icon="mdi-email"
+                      :rules="emailRules"
+                      label="E-mail"
+                      type="email"
+                      required
+                    ></v-text-field>
 
-              <v-col class="text-no-wrap" cols="5" sm="3">
-                <strong v-html="message.categoryId"></strong>
-              </v-col>
+                    <v-text-field
+                      v-model="password"
+                      append-icon="mdi-lock-question"
+                      label="Password"
+                      type="password"
+                      required
+                    ></v-text-field>
 
-              <v-col
-                v-if="message.foodAndBevPrice"
-                class="grey--text text-truncate hidden-sm-and-down"
-              >
-                &mdash;
-                {{ message.foodAndBevPrice }}
+                    <v-btn
+                      color="blue white--text"
+                      class="mr-4"
+                      width="200"
+                      @click="signInAdmin()"
+                    >
+                      Login
+                    </v-btn>
+                  </v-form>
+                </v-row>
               </v-col>
             </v-row>
-          </v-expansion-panel-header>
-
-          <v-expansion-panel-content>
-            <v-divider></v-divider>
-            <v-card-text v-text="lorem"></v-card-text>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-row>
-  </v-container>
+          </v-container>
+        </v-card>
+      </v-flex></v-layout
+    >
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ text }}
+      <v-btn color="blue" text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
+  </v-app>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import * as aa from '@/store/authenModule/apiService'
-export default Vue.extend({
-  data() {
-    return {
-      title: 'Shoot buy',
-      orderId: 0,
-      addressId: 0,
-      messages: [
-        {
-          avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-          productId: 'John Leider',
-          categoryId: 'Welcome to Vuetify.js!',
-          foodAndBevPrice: 'Thank you for joining our community...'
-        }
-      ],
-      lorem:
-        'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
+<script>
+import firebase from 'firebase'
+export default {
+  data: () => ({
+    email: '',
+    password: '',
+    snackbar: false,
+    text: 'Only admin allowed!.',
+    timeout: 2000,
+    userData: {
+      displayName: String
     }
-  },
-  async created() {
-    await aa.getUserList().then((res: any) => {
-      this.messages = res
-      // console.log(res)
-    })
-  },
+  }),
+  async mounted() {},
   methods: {
-    async send() {
-      await aa
-        .submit({
-          orderId: this.orderId,
-          addressId: this.addressId
+    signInAdmin() {
+      // console.log('Login')
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          this.$router.push('/testtest')
+          // console.log('Email: ' + result.user.email)
+          // console.log('UID: ' + result.user.uid)
         })
-        .then((res: any) => {
-          // console.log(res)
+        .catch((e) => {
+          // this.$snotify.error(e.message)
+          this.snackbar = true
+          this.email = ''
+          this.password = ''
+          // console.log(e.message)
         })
-    },
-    test() {
-      this.title = 'MEEN'
     }
   }
-})
+}
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app style="background-color : #194375" dark>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-toolbar-title v-text="title" />
       <v-spacer />
@@ -109,7 +109,7 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(() => {
-          this.$router.push('/adminLogin')
+          this.$router.push('/')
         })
     }
   }
