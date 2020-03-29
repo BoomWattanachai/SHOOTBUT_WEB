@@ -106,10 +106,21 @@ export async function selectProductFoodData(productId: string) {
   }
 }
 
+export async function selectProductTileData(productId: string) {
+  try {
+    const res = await BaseUrl.get(
+      '/product-data/selectProductTileData/' + productId
+    )
+    return res.data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export async function selectProductFurniture(productId: string) {
   try {
     const res = await BaseUrl.get(
-      '/user-data/selectProductFurniture/' + productId
+      '/product-data/selectProductFurnitureData/' + productId
     )
     return res.data
   } catch (e) {
@@ -120,7 +131,7 @@ export async function selectProductFurniture(productId: string) {
 export async function selectProductElectronic(productId: string) {
   try {
     const res = await BaseUrl.get(
-      '/user-data/selectProductElectronic/' + productId
+      '/product-data/selectProductElectronicData/' + productId
     )
     return res.data
   } catch (e) {

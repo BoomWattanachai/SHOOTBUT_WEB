@@ -191,36 +191,6 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Legal first name*"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Legal middle name"
-                      hint="example of helper text only on focus"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Legal last name*"
-                      hint="example of persistent helper text"
-                      persistent-hint
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field label="Email*" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password*"
-                      type="password"
-                      required
-                    ></v-text-field>
-                  </v-col> -->
                       <v-col cols="12" sm="12">
                         <v-select
                           v-model="seller"
@@ -228,23 +198,6 @@
                           label="Email's Sender"
                         ></v-select>
                       </v-col>
-                      <!-- <v-col cols="12" sm="6">
-                    <v-autocomplete
-                      :items="[
-                        'Skiing',
-                        'Ice hockey',
-                        'Soccer',
-                        'Basketball',
-                        'Hockey',
-                        'Reading',
-                        'Writing',
-                        'Coding',
-                        'Basejump'
-                      ]"
-                      label="Interests"
-                      multiple
-                    ></v-autocomplete>
-                  </v-col> -->
                     </v-row>
                   </v-container>
                   <!-- <small>*indicates required field</small> -->
@@ -434,6 +387,20 @@ export default Vue.extend({
                       }
                     })
                 )
+              } else if (product.categoryId === 4) {
+                promises.push(
+                  apiService
+                    .selectProductTileData(product.productId)
+                    .then((response) => {
+                      const data = response[0]
+                      orderDetail.product.productDetail = {
+                        image: data.tileImage,
+                        brand: data.tileBrand,
+                        model: data.tileModel,
+                        price: data.tilePrice
+                      }
+                    })
+                )
               }
             })
           })
@@ -505,6 +472,9 @@ export default Vue.extend({
           })
           .then(() => {
             this.dataList = arrayData
+          })
+          .then(() => {
+            this.filteredMessage2()
           })
       }
     }

@@ -9,7 +9,7 @@
                 <v-img
                   height="500"
                   width="500"
-                  src="https://men.mthai.com/app/uploads/2018/10/201704091101059430.jpg"
+                  src="https://image.freepik.com/free-psd/hipster-shop-sign-mockup-with-elk-motif_53876-65961.jpg"
                 ></v-img>
               </v-col>
 

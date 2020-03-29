@@ -7,8 +7,8 @@
             <v-row justify="space-between">
               <v-col cols="12" md="6">
                 <v-img
-                  height="500"
-                  width="500"
+                  height="300"
+                  width="300"
                   src="https://men.mthai.com/app/uploads/2018/10/201704091101059430.jpg"
                 ></v-img>
               </v-col>
