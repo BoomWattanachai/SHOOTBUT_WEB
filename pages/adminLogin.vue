@@ -7,9 +7,9 @@
             <v-row justify="space-between">
               <v-col cols="12" md="6">
                 <v-img
-                  height="500"
-                  width="500"
-                  src="https://image.freepik.com/free-psd/hipster-shop-sign-mockup-with-elk-motif_53876-65961.jpg"
+                  height="300"
+                  width="300"
+                  src="https://men.mthai.com/app/uploads/2018/10/201704091101059430.jpg"
                 ></v-img>
               </v-col>
 
@@ -68,7 +68,7 @@ export default {
     email: '',
     password: '',
     snackbar: false,
-    text: 'Email and Password mismatch',
+    text: 'Only admin allowed!.',
     timeout: 2000,
     userData: {
       displayName: String

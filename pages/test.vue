@@ -1,100 +1,70 @@
 <template>
-  <v-container fluid>
-    <v-row justify="center">
-      <v-subheader>Today</v-subheader>
-
-      <v-expansion-panels popout>
-        <v-expansion-panel
-          v-for="(message, i) in messages"
-          :key="i"
-          hide-actions
-        >
-          <v-expansion-panel-header>
-            <v-row align="center" class="spacer" no-gutters>
-              <v-col cols="4" sm="2" md="1">
-                <v-avatar size="36px">
-                  <img
-                    v-if="message.avatar"
-                    alt="Avatar"
-                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+  <v-app id="inspire">
+    <v-content>
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="8" md="4">
+            <v-card class="elevation-12">
+              <v-toolbar color="primary" dark flat>
+                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-spacer />
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn :href="source" icon large target="_blank" v-on="on">
+                      <v-icon>mdi-code-tags</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Source</span>
+                </v-tooltip>
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      icon
+                      large
+                      href="https://codepen.io/johnjleider/pen/pMvGQO"
+                      target="_blank"
+                      v-on="on"
+                    >
+                      <v-icon>mdi-codepen</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Codepen</span>
+                </v-tooltip>
+              </v-toolbar>
+              <v-card-text>
+                <v-form>
+                  <v-text-field
+                    label="Login"
+                    name="login"
+                    prepend-icon="person"
+                    type="text"
                   />
-                  <v-icon
-                    v-else
-                    :color="message.color"
-                    v-text="message.icon"
-                  ></v-icon>
-                </v-avatar>
-              </v-col>
 
-              <v-col class="hidden-xs-only" sm="5" md="3">
-                <strong v-html="message.name"></strong>
-                <span v-if="message.total" class="grey--text">
-                  &nbsp;({{ message.total }})
-                </span>
-              </v-col>
-
-              <v-col class="text-no-wrap" cols="5" sm="3">
-                <v-chip
-                  v-if="message.new"
-                  :color="`${message.color} lighten-4`"
-                  class="ml-0 mr-2 black--text"
-                  label
-                  small
-                >
-                  {{ message.new }} new
-                </v-chip>
-                <strong v-html="message.title"></strong>
-              </v-col>
-
-              <v-col
-                v-if="message.excerpt"
-                class="grey--text text-truncate hidden-sm-and-down"
-              >
-                &mdash;
-                {{ message.excerpt }}
-              </v-col>
-            </v-row>
-          </v-expansion-panel-header>
-
-          <v-expansion-panel-content>
-            <v-divider></v-divider>
-            <v-card-text v-text="lorem"></v-card-text>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-row>
-  </v-container>
+                  <v-text-field
+                    id="password"
+                    label="Password"
+                    name="password"
+                    prepend-icon="lock"
+                    type="password"
+                  />
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="primary">Login</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
+
 <script>
 export default {
-  data: () => ({
-    messages: [
-      {
-        avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-        name: 'John Leider',
-        title: 'Welcome to Vuetify.js!',
-        excerpt: 'Thank you for joining our community...'
-      },
-      {
-        color: 'red',
-        icon: 'people',
-        name: 'Social',
-        new: 1,
-        total: 3,
-        title: 'Twitter'
-      },
-      {
-        color: 'teal',
-        icon: 'local_offer',
-        name: 'Promos',
-        new: 2,
-        total: 4,
-        title: 'Shop your way',
-        exceprt: 'New deals available, Join Today'
-      }
-    ],
-    lorem:
-      'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
-  })
+  props: {
+    source: String
+  }
 }
 </script>

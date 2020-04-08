@@ -5,7 +5,7 @@
   "author": "internDPU",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
+    "dev": "nuxt-ts --port 3001",
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
@@ -19,7 +19,11 @@
     "@nuxt/typescript-runtime": "^0.4.0",
     "@nuxtjs/axios": "^5.3.6",
     "cross-env": "^5.2.0",
-    "nuxt": "^2.0.0"
+    "firebase": "^7.10.0",
+    "moment": "^2.24.0",
+    "nuxt": "^2.0.0",
+    "vue-moment": "^4.1.0",
+    "vuex-module-decorators": "^0.16.1"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",
